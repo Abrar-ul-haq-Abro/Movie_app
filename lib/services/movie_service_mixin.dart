@@ -1,25 +1,27 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import '../models/movie.dart';
 import '../models/movie_detail.dart';
 import '../models/video.dart';
 import '../core/constants/api_constants.dart';
+import 'network_service.dart';
 
 mixin MovieServiceMixin {
-  final Dio _dio = Dio();
+  // Lazy initialization of NetworkService
+  NetworkService? _networkServiceInstance;
+  
+  NetworkService get _networkService {
+    _networkServiceInstance ??= NetworkService();
+    return _networkServiceInstance!;
+  }
 
   Future<List<Movie>> getUpcomingMovies() async {
     try {
       debugPrint('Making API call to: ${ApiConstants.baseUrl}${ApiConstants.upcomingMovies}');
       
-      final response = await _dio.get(
+      final response = await _networkService.get(
         '${ApiConstants.baseUrl}${ApiConstants.upcomingMovies}',
         queryParameters: ApiConstants.defaultQueryParams,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
+        headers: {'Content-Type': 'application/json'},
       );
 
       debugPrint("MovieList API Response Status Code: ${response.statusCode}");
@@ -60,14 +62,10 @@ mixin MovieServiceMixin {
 
   Future<MovieDetail> getMovieDetails(int movieId) async {
     try {
-      final response = await _dio.get(
+      final response = await _networkService.get(
         '${ApiConstants.baseUrl}${ApiConstants.movieDetails(movieId)}',
         queryParameters: ApiConstants.defaultQueryParams,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -83,14 +81,10 @@ mixin MovieServiceMixin {
   Future<List<Video>> getMovieVideos(int movieId) async {
     try {
       debugPrint('Fetching videos for movie ID: $movieId');
-      final response = await _dio.get(
+      final response = await _networkService.get(
         '${ApiConstants.baseUrl}${ApiConstants.movieVideos(movieId)}',
         queryParameters: ApiConstants.defaultQueryParams,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
+        headers: {'Content-Type': 'application/json'},
       );
 
       debugPrint('Videos API Response Status: ${response.statusCode}');

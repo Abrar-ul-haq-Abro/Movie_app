@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 enum SeatType { available, unavailable, selected, vip }

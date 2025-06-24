@@ -1,4 +1,3 @@
-import 'package:movie_app/ui/views/movie_detail/video_player_screen.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import '../../../app/app.router.dart';
 import '../../../models/movie_detail.dart';
 import '../../../models/video.dart';
 import '../../../services/movie_service_mixin.dart';
+import '../../widgets/video_player_screen.dart';
 
 class MovieDetailViewModel extends BaseViewModel with MovieServiceMixin {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -19,6 +19,7 @@ class MovieDetailViewModel extends BaseViewModel with MovieServiceMixin {
 
   MovieDetail? get movieDetail => _movieDetail;
   List<Video> get videos => _videos;
+  @override
   bool get hasError => _hasError;
   String get errorMessage => _errorMessage;
   bool get hasTrailer => _videos.isNotEmpty;
